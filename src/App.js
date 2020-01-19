@@ -1,26 +1,59 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+
 import './App.css';
+import TodoList from './components/TodoList'
+import Header from "./components/header";
+import AddTodo from "./components/AddTodo";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    state = {
+        todos: [
+            {
+                id: 1,
+                title: "Learn React",
+                completed: false
+            }
+        ]
+    };
+
+
+    // Toggle Complete
+    markComplete = (id) => {
+        this.setState({todos: this.state.todos.map(todo => {
+            if(todo.id === id){
+                todo.completed = !todo.completed;
+            }
+            return todo
+            })})
+    };
+
+    delTodo = (id) => {
+         this.setState({todos: [...this.state.todos.filter(todo => todo.id !== id)]});
+    };
+
+    addTodo = (title) => {
+        let id = 1;
+        if(this.state.todos.length>=1){
+            id = this.state.todos[this.state.todos.length - 1].id + 1;
+        }
+        const todo = {
+                id: id,
+                title: title,
+                completed:false
+            };
+            this.setState({todos: [...this.state.todos, todo]});
+
+    };
+    render() {
+            return (
+                <div className="App">
+                    <div className='container'>
+                    <Header/>
+                    <AddTodo addTodo={this.addTodo}/>
+                    <TodoList todos={this.state.todos} markComplete={this.markComplete} delTodo={this.delTodo}/>
+                    </div>
+                </div>
+            );
+    }
 }
-
 export default App;
